@@ -41,7 +41,7 @@ export default function SelectValidator({
           {validatorAddress
             ? validators?.find(
                 (validatorItem) => validatorAddress === validatorItem.operatorAddress,
-              )?.description.moniker || "Unknown validator"
+              )?.description?.moniker || "Unknown validator"
             : "Select validator…"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -72,7 +72,7 @@ export default function SelectValidator({
                       : "opacity-0",
                   )}
                 />
-                {validatorItem.description.moniker}
+                {validatorItem.description?.moniker}
               </CommandItem>
             ))}
           </CommandGroup>

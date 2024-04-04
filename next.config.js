@@ -3,6 +3,7 @@ const webpackLib = require("webpack");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   reactStrictMode: true,
   webpack: (config, { isServer }) => {
     if (!isServer) {

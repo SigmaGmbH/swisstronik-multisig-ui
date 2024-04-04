@@ -2,7 +2,7 @@ import { isChainInfoFilled } from "@/context/ChainsContext/helpers";
 import { toastError, toastSuccess } from "@/lib/utils";
 import { MultisigThresholdPubkey } from "@cosmjs/amino";
 import { fromBase64 } from "@cosmjs/encoding";
-import { Account, StargateClient, makeMultisignedTxBytes } from "@cosmjs/stargate";
+import { Account } from "@cosmjs/stargate";
 import { assert } from "@cosmjs/utils";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
@@ -21,6 +21,7 @@ import { getMultisigAccount } from "../../../../lib/multisigHelpers";
 import { requestJson } from "../../../../lib/request";
 import { dbTxFromJson } from "../../../../lib/txMsgHelpers";
 import { DbSignature } from "../../../../types";
+import { SwisstronikStargateClient, makeMultisignedTxBytes } from "@swisstronik/sdk";
 
 interface Props {
   props: {
@@ -90,7 +91,7 @@ const TransactionPage = ({
           return;
         }
 
-        const client = await StargateClient.connect(chain.nodeAddress);
+        const client = await SwisstronikStargateClient.connect(chain.nodeAddress);
         const result = await getMultisigAccount(multisigAddress, chain.addressPrefix, client);
 
         setPubkey(result[0]);
@@ -127,7 +128,7 @@ const TransactionPage = ({
         new Map(currentSignatures.map((s) => [s.address, fromBase64(s.signature)])),
       );
 
-      const broadcaster = await StargateClient.connect(chain.nodeAddress);
+      const broadcaster = await SwisstronikStargateClient.connect(chain.nodeAddress);
       const result = await broadcaster.broadcastTx(signedTxBytes);
       console.log(result);
       await requestJson(`/api/transaction/${transactionID}`, {

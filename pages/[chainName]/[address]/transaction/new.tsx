@@ -1,5 +1,5 @@
 import { isChainInfoFilled } from "@/context/ChainsContext/helpers";
-import { Account, StargateClient } from "@cosmjs/stargate";
+import { Account } from "@cosmjs/stargate";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import CreateTxForm from "../../../../components/forms/CreateTxForm";
@@ -7,6 +7,7 @@ import Page from "../../../../components/layout/Page";
 import StackableContainer from "../../../../components/layout/StackableContainer";
 import { useChains } from "../../../../context/ChainsContext";
 import { getMultisigAccount } from "../../../../lib/multisigHelpers";
+import { SwisstronikStargateClient } from "@swisstronik/sdk";
 
 const NewTransactionPage = () => {
   const { chain } = useChains();
@@ -22,7 +23,7 @@ const NewTransactionPage = () => {
           return;
         }
 
-        const client = await StargateClient.connect(chain.nodeAddress);
+        const client = await SwisstronikStargateClient.connect(chain.nodeAddress);
         const result = await getMultisigAccount(multisigAddress, chain.addressPrefix, client);
 
         setAccountOnChain(result[1]);

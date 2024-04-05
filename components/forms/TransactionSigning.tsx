@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { toastError, toastSuccess } from "@/lib/utils";
 import { LoadingStates, SigningStatus } from "@/types/signing";
 import { MultisigThresholdPubkey, makeCosmoshubPath } from "@cosmjs/amino";
@@ -7,7 +8,6 @@ import { LedgerSigner } from "@cosmjs/ledger-amino";
 import { Registry } from "@cosmjs/proto-signing";
 import {
   AminoTypes,
-  SigningStargateClient,
   createDefaultAminoConverters,
   defaultRegistryTypes,
 } from "@cosmjs/stargate";
@@ -22,6 +22,7 @@ import { DbSignature, DbTransaction, WalletAccount } from "../../types";
 import HashView from "../dataViews/HashView";
 import Button from "../inputs/Button";
 import StackableContainer from "../layout/StackableContainer";
+import { SwisstronikSigningStargateClient } from "@swisstronik/sdk";
 
 interface TransactionSigningProps {
   readonly signatures: DbSignature[];
@@ -150,7 +151,7 @@ const TransactionSigning = (props: TransactionSigningProps) => {
 
       const signerAddress = walletAccount?.bech32Address;
       assert(signerAddress, "Missing signer address");
-      const signingClient = await SigningStargateClient.offline(offlineSigner, {
+      const signingClient = await SwisstronikSigningStargateClient.offline(offlineSigner, {
         registry: new Registry([...defaultRegistryTypes, ...wasmTypes]),
         aminoTypes: new AminoTypes({
           ...createDefaultAminoConverters(),

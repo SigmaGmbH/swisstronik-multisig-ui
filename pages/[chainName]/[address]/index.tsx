@@ -1,6 +1,7 @@
 import { isChainInfoFilled } from "@/context/ChainsContext/helpers";
 import { MultisigThresholdPubkey, SinglePubkey } from "@cosmjs/amino";
-import { Account, StargateClient } from "@cosmjs/stargate";
+import { Account } from "@cosmjs/stargate";
+import { SwisstronikStargateClient } from "@swisstronik/sdk";
 import { Coin } from "cosmjs-types/cosmos/base/v1beta1/coin";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -39,7 +40,7 @@ const Multipage = () => {
           return;
         }
 
-        const client = await StargateClient.connect(chain.nodeAddress);
+        const client = await SwisstronikStargateClient.connect(chain.nodeAddress);
 
         const tempHoldings = await client.getAllBalances(multisigAddress);
         setHoldings(tempHoldings);

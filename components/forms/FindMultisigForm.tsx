@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ChainInfo } from "@/context/ChainsContext/types";
-import { StargateClient } from "@cosmjs/stargate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { NextRouter, withRouter } from "next/router";
@@ -19,10 +18,11 @@ import { z } from "zod";
 import { useChains } from "../../context/ChainsContext";
 import { exampleAddress } from "../../lib/displayHelpers";
 import { getMultisigAccount } from "../../lib/multisigHelpers";
+import { SwisstronikStargateClient } from "@swisstronik/sdk";
 
 const existsMultisigAccount = async (chain: ChainInfo, address: string) => {
   try {
-    const client = await StargateClient.connect(chain.nodeAddress);
+    const client = await SwisstronikStargateClient.connect(chain.nodeAddress);
     const [, account] = await getMultisigAccount(address, chain.addressPrefix, client);
     return account !== null;
   } catch {

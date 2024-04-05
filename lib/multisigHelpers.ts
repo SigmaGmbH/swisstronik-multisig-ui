@@ -2,12 +2,12 @@ import {
   createMultisigThresholdPubkey,
   isMultisigThresholdPubkey,
   MultisigThresholdPubkey,
-  pubkeyToAddress,
 } from "@cosmjs/amino";
-import { Account, StargateClient } from "@cosmjs/stargate";
+import { Account } from "@cosmjs/stargate";
 import { assert } from "@cosmjs/utils";
 import { checkAddress } from "./displayHelpers";
 import { requestJson } from "./request";
+import { pubkeyToAddress, SwisstronikStargateClient } from "@swisstronik/sdk";
 
 interface CreateMultisigAccountResponse {
   readonly address: string;
@@ -36,7 +36,7 @@ const createMultisigFromCompressedSecp256k1Pubkeys = async (
     };
   });
   const multisigPubkey = createMultisigThresholdPubkey(pubkeys, threshold);
-  const multisigAddress = pubkeyToAddress(multisigPubkey, addressPrefix);
+  const multisigAddress = pubkeyToAddress(multisigPubkey);
 
   // save multisig to relational offchain database
   const multisig = {
@@ -68,7 +68,7 @@ interface GetMultisigAccountResponse {
 const getMultisigAccount = async (
   address: string,
   addressPrefix: string,
-  client: StargateClient,
+  client: SwisstronikStargateClient,
 ): Promise<[MultisigThresholdPubkey, Account | null]> => {
   // we need the multisig pubkeys to create transactions, if the multisig
   // is new, and has never submitted a transaction its pubkeys will not be
